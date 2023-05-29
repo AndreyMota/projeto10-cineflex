@@ -1,12 +1,37 @@
 import styled from "styled-components"
+import axios from "../axiosConfig.jsx";
+import { useState } from "react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
+    const [filmes, setFilmes] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            alert("chegou aqui");
+            const response = await axios.get('/movies');
+            console.log(response);
+            setFilmes(response.data);
+        } catch (error) {
+            console.error('Erro ao obter os dados: ' + error);
+        }
+        };
+        fetchData();
+    }, []);
+    /* axios.get('/movies')
+        .then(r => {
+            console.log(r);
+
+        })
+        .catch(e => console.log(e)); */
     return (
         <PageContainer>
             Selecione o filme
 
             <ListContainer>
-                <MovieContainer>
+                {/* <MovieContainer>
                     <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
                 </MovieContainer>
 
@@ -20,7 +45,14 @@ export default function HomePage() {
 
                 <MovieContainer>
                     <img src={"https://br.web.img2.acsta.net/pictures/22/05/16/17/59/5165498.jpg"} alt="poster"/>
-                </MovieContainer>
+                </MovieContainer> */}
+                {filmes.map(x => {
+                    return (
+                        <Link to={`/sessoes/${x.id}`}>
+                            <MovieContainer><img src={x.posterURL}/></MovieContainer>
+                        </Link>
+                    )
+                })}
             </ListContainer>
 
         </PageContainer>
