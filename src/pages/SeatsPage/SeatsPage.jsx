@@ -3,11 +3,17 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
-export default function SeatsPage() {
+
+export default function SeatsPage({ pedido, setPedido }) {
     const params = useParams();
     const [assentos, setAssentos] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [ass, setAss] = useState([]);
+    const [nome, setNome] = useState("");
+	const [cpf, setCpf] = useState("");
+    const sento = [];
     useEffect(() => {
         
         axios
@@ -15,6 +21,7 @@ export default function SeatsPage() {
         .then((response) => {
             console.log(response.data);
             setAssentos(response.data);
+            setAss(response.data.seats)
             setIsLoading(false);
         })
         .catch((error) => {
@@ -26,20 +33,38 @@ export default function SeatsPage() {
         return <div>Carregando...</div>
     } 
 
-    function changeStateAssets() {
+    function changeStateAssets(aid) {
+        sento.push(aid)
+    }
+
+    function soSucces (event) {
+		event.preventDefault();
+        alert('clicou');
+        const novo = {
+            titu: assentos.movie.title,
+            data: assentos.day.date,
+            hora: assentos.name,
+            seto: sento,
+            comp: nome,
+            cpif: cpf
+        };
+        console.log(novo);
+
+        setPedido(novo);
 
     }
-    
     return (
         <PageContainer>
             Selecione o(s) assento(s)
             <SeatsContainer>
-                {assentos.seats?.map(x => {
+                {ass.map(x => {
                     return (
-                        <SeatItem
-                        status = {x.isAvailable}
-                        selecionado = {false}
-                        >{x.id}</SeatItem>
+                        <div data-test="seat" onClick={() => changeStateAssets(x.id)}>
+                            <SeatItem
+                            status = {x.isAvailable}
+                            selecionado = {false}
+                            >{x.id}</SeatItem>
+                        </div>
                     )
                 })}
             </SeatsContainer>
@@ -60,24 +85,29 @@ export default function SeatsPage() {
             </CaptionContainer>
 
             <FormContainer>
-                Nome do Comprador:
-                <input placeholder="Digite seu nome..." />
+                <form>
+                    Nome do Comprador:
+                    <input data-test="client-name" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Digite seu nome..." required/>
 
-                CPF do Comprador:
-                <input placeholder="Digite seu CPF..." />
-
-                <button>Reservar Assento(s)</button>
+                    CPF do Comprador:
+                    <input data-test="client-cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="Digite seu CPF..." required/>
+                    
+                    <Link to={'/sucesso'}><button data-test="book-seat-btn" onClick={soSucces} type="submit">Reservar Assento(s)</button></Link>
+                </form>
             </FormContainer>
-
-            <FooterContainer>
-                <div>
-                    <img src={assentos?.movie.posterURL} alt="" />
-                </div>
-                <div>
-                    <p>Tudo em todo lugar ao mesmo tempo</p>
-                    <p>Sexta - 14h00</p>
-                </div>
-            </FooterContainer>
+            
+            
+                <FooterContainer>
+                    <div data-test="footer">
+                        <div>
+                            <img src={assentos?.movie.posterURL} alt="" />
+                        </div>
+                        <div>
+                            <p>{assentos.movie.title}</p>
+                            <p>{assentos.day.weekday} - {assentos.name}</p>
+                        </div>
+                    </div>
+                </FooterContainer>
 
         </PageContainer>
     )

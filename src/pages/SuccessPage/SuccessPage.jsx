@@ -1,31 +1,45 @@
-import styled from "styled-components"
+import styled from "styled-components";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-export default function SuccessPage() {
+export default function SuccessPage({ pedido }) {
+    const [isLoading, setIsLoading] = useState(true);
+    console.log(pedido);
+
+    if (!pedido) {
+        return <div>Carregando...</div>
+    } 
 
     return (
         <PageContainer>
             <h1>Pedido feito <br /> com sucesso!</h1>
-
-            <TextContainer>
-                <strong><p>Filme e sessão</p></strong>
-                <p>Tudo em todo lugar ao mesmo tempo</p>
-                <p>03/03/2023 - 14:00</p>
-            </TextContainer>
-
-            <TextContainer>
-                <strong><p>Ingressos</p></strong>
-                <p>Assento 01</p>
-                <p>Assento 02</p>
-                <p>Assento 03</p>
-            </TextContainer>
-
-            <TextContainer>
-                <strong><p>Comprador</p></strong>
-                <p>Nome: Letícia Chijo</p>
-                <p>CPF: 123.456.789-10</p>
-            </TextContainer>
-
-            <button>Voltar para Home</button>
+            <div data-test="movie-info">
+                <TextContainer>
+                    <strong><p>Filme e sessão</p></strong>
+                    <p>{pedido.titu}</p>
+                    <p>{pedido.data} - {pedido.hora}</p>
+                </TextContainer>
+            </div>
+            <div data-test="seats-info">
+                <TextContainer>
+                    <strong><p>Ingressos</p></strong>
+                    {pedido.sento?.map(x => {
+                        return (
+                            <p>Assento {x}</p>
+                        )
+                    })}
+                </TextContainer>
+            </div>
+            <div data-test="client-info">
+                <TextContainer>
+                    <strong><p>Comprador</p></strong>
+                    <p>Nome: {pedido.comp}</p>
+                    <p>CPF: {pedido.cpif}</p>
+                </TextContainer>
+            </div>
+            <Link to={'/'}>
+                <button data-test="go-home-btn">Voltar para Home</button>
+            </Link>
         </PageContainer>
     )
 }
