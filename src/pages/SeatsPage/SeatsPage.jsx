@@ -7,6 +7,7 @@ import axios from "axios";
 export default function SeatsPage() {
     const params = useParams();
     const [assentos, setAssentos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         
         axios
@@ -14,12 +15,14 @@ export default function SeatsPage() {
         .then((response) => {
             console.log(response.data);
             setAssentos(response.data);
+            setIsLoading(false);
         })
         .catch((error) => {
             console.log(error);
+            setIsLoading(false);
         });
     }, []);
-    if (!assentos) {
+    if (isLoading) {
         return <div>Carregando...</div>
     } 
 
@@ -34,18 +37,12 @@ export default function SeatsPage() {
                 {assentos.seats?.map(x => {
                     return (
                         <SeatItem
-                            status = {x.seats.isAvailable}
+                        status = {x.isAvailable}
+                        selecionado = {false}
                         >{x.id}</SeatItem>
                     )
                 })}
             </SeatsContainer>
-            {/* <SeatsContainer>
-                <SeatItem>01</SeatItem>
-                <SeatItem>02</SeatItem>
-                <SeatItem>03</SeatItem>
-                <SeatItem>04</SeatItem>
-                <SeatItem>05</SeatItem>
-            </SeatsContainer> */}
 
             <CaptionContainer>
                 <CaptionItem>
@@ -74,7 +71,7 @@ export default function SeatsPage() {
 
             <FooterContainer>
                 <div>
-                    {/* {<img src={assentos.movie.postURL} alt="poster" />} */}
+                    <img src={assentos?.movie.posterURL} alt="" />
                 </div>
                 <div>
                     <p>Tudo em todo lugar ao mesmo tempo</p>
@@ -157,9 +154,9 @@ const SeatItem = styled.div`
   justify-content: center;
   margin: 5px 3px;
   background-color: ${(props) => {
-   /*  if (props.status === "selected") {
+    if (props.selecionado && !props.status) {
       return "rgba(26, 174, 158, 1)";
-    } else */ 
+    } else 
     if (props.status) {
       return "rgba(195, 207, 217, 1)";
     } else if (!props.status) {
