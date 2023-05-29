@@ -39,7 +39,6 @@ export default function SeatsPage({ pedido, setPedido }) {
 
     function soSucces (event) {
 		event.preventDefault();
-        alert('clicou');
         const novo = {
             titu: assentos.movie.title,
             data: assentos.day.date,
