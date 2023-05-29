@@ -28,13 +28,13 @@ export default function SessionsPage() {
             <div>
                 {session.days?.map(x => {
                     return (
-                        <SessionContainer>
+                        <SessionContainer data-test="movie-day">
                             {x.weekday} - {x.date}
                             <ButtonsContainer>
                                 {x.showtimes.map(h => {
                                     return (
                                         <Link to={`/assentos/${h.id}`}>
-                                            <ButtonHorario id={h.id}>{h.name}</ButtonHorario>
+                                            <ButtonHorario data-test="showtime" id={h.id}>{h.name}</ButtonHorario>
                                         </Link>
                                     )
                                 })}

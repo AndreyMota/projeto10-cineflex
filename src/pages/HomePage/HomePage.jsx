@@ -10,7 +10,6 @@ export default function HomePage() {
     useEffect(() => {
         const fetchData = async () => {
         try {
-            alert("chegou aqui");
             const response = await axios.get('/movies');
             console.log(response);
             setFilmes(response.data);
@@ -49,7 +48,7 @@ export default function HomePage() {
                 {filmes.map(x => {
                     return (
                         <Link to={`/sessoes/${x.id}`}>
-                            <MovieContainer><img src={x.posterURL}/></MovieContainer>
+                            <MovieContainer data-test="movie"><img src={x.posterURL}/></MovieContainer>
                         </Link>
                     )
                 })}
